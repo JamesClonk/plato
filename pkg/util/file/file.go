@@ -27,13 +27,13 @@ func Delete(filename string) error {
 func SHA1(filename string) string {
 	f, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf(color.Red("could not open file [%s]: %v", color.Magenta(filename), err))
+		log.Fatalf("%s", color.Red("could not open file [%s]: %v", color.Magenta(filename), err))
 	}
 	defer f.Close()
 
 	hasher := sha1.New()
 	if _, err := io.Copy(hasher, f); err != nil {
-		log.Fatalf(color.Red("could not read file [%s]: %v", color.Magenta(f.Name()), err))
+		log.Fatalf("%s", color.Red("could not read file [%s]: %v", color.Magenta(f.Name()), err))
 	}
 	return hex.EncodeToString(hasher.Sum(nil))
 }
@@ -41,13 +41,13 @@ func SHA1(filename string) string {
 func SHA256(filename string) string {
 	f, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf(color.Red("could not open file [%s]: %v", color.Magenta(filename), err))
+		log.Fatalf("%s", color.Red("could not open file [%s]: %v", color.Magenta(filename), err))
 	}
 	defer f.Close()
 
 	hasher := sha256.New()
 	if _, err := io.Copy(hasher, f); err != nil {
-		log.Fatalf(color.Red("could not read file [%s]: %v", color.Magenta(f.Name()), err))
+		log.Fatalf("%s", color.Red("could not read file [%s]: %v", color.Magenta(f.Name()), err))
 	}
 	return hex.EncodeToString(hasher.Sum(nil))
 }
@@ -73,7 +73,7 @@ func ChecksumError(file, expectedSHA string) error {
 				color.Cyan(file), color.Red(sha256), color.Green(expectedSHA))
 		}
 	default:
-		return fmt.Errorf(color.Red("valid sha checksum missing for [%s]", file))
+		return fmt.Errorf("%s", color.Red("valid sha checksum missing for [%s]", file))
 	}
 	return nil
 }
@@ -81,7 +81,7 @@ func ChecksumError(file, expectedSHA string) error {
 func Read(filename string) string {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		log.Fatalf(color.Red("could not read filename [%s]: %v", color.Magenta(filename), err))
+		log.Fatalf("%s", color.Red("could not read filename [%s]: %v", color.Magenta(filename), err))
 	}
 	return string(data)
 }
@@ -110,14 +110,14 @@ func Contains(filename, content string) bool {
 
 func Touch(filename string) {
 	if _, err := os.Create(filename); err != nil {
-		log.Fatalf(color.Red("could not create file [%s]: %v", color.Magenta(filename), err))
+		log.Fatalf("%s", color.Red("could not create file [%s]: %v", color.Magenta(filename), err))
 	}
 }
 
 func Write(filename, content string) {
 	if err := os.WriteFile(filename, []byte(content), 0664); err != nil {
-		log.Errorf(color.Red("could not write to file [%s]:\n%s", color.Magenta(filename), content))
-		log.Fatalf(color.Red("%v", err))
+		log.Errorf("%s", color.Red("could not write to file [%s]:\n%s", color.Magenta(filename), content))
+		log.Fatalf("%s", color.Red("%v", err))
 	}
 }
 
@@ -126,13 +126,13 @@ func Prepend(filename, content string) {
 
 	info, err := os.Stat(filename)
 	if err != nil {
-		log.Fatalf(color.Red("could not stat filename [%s]: %v", color.Magenta(filename), err))
+		log.Fatalf("%s", color.Red("could not stat filename [%s]: %v", color.Magenta(filename), err))
 	}
 	mode := info.Mode()
 
 	if err := os.WriteFile(filename, []byte(content+data), mode); err != nil {
-		log.Errorf(color.Red("could not write to file [%s]:\n%s", color.Magenta(filename), content))
-		log.Fatalf(color.Red("%v", err))
+		log.Errorf("%s", color.Red("could not write to file [%s]:\n%s", color.Magenta(filename), content))
+		log.Fatalf("%s", color.Red("%v", err))
 	}
 }
 
@@ -144,10 +144,10 @@ func CopySymlink(source, dest string) {
 	link, err := os.Readlink(source)
 	if err != nil {
 		log.Errorf("could not read symlink [%s]", color.Magenta(source))
-		log.Fatalf(color.Red("%v", err))
+		log.Fatalf("%s", color.Red("%v", err))
 	}
 	if err := os.Symlink(link, dest); err != nil {
 		log.Errorf("could not copy symlink [%s] to [%s]", color.Magenta(source), color.Magenta(dest))
-		log.Fatalf(color.Red("%v", err))
+		log.Fatalf("%s", color.Red("%v", err))
 	}
 }

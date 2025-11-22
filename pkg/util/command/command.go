@@ -51,8 +51,8 @@ func runOutput(cmd *xc.Cmd) string {
 	output, err := execOutput(cmd)
 	if err != nil {
 		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
-		log.Errorf(color.Red("%s", output))
-		log.Fatalf(color.Red("%v", err))
+		log.Errorf("%s", color.Red("%s", output))
+		log.Fatalf("%s", color.Red("%v", err))
 	}
 	return output
 }
@@ -125,20 +125,20 @@ func execWithLogfiles(cmd *xc.Cmd, logfile, errfile string) error {
 func runWithLogfiles(cmd *xc.Cmd, logfile, errfile string) {
 	if err := execWithLogfiles(cmd, logfile, errfile); err != nil {
 		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
-		log.Fatalf(color.Red("%v", err))
+		log.Fatalf("%s", color.Red("%v", err))
 	}
 }
 
 func RunPiped(commands ...*xc.Cmd) string {
 	if len(commands) < 1 {
-		log.Fatalf(color.Fail("not enough commands passed to RunPiped()"))
+		log.Fatalf("%s", color.Fail("not enough commands passed to RunPiped()"))
 	}
 	var stdout bytes.Buffer
 
 	for c := range commands[:len(commands)-1] {
 		if pipe, err := commands[c].StdoutPipe(); err != nil {
 			log.Debugf("failed command: %v", strings.Join(commands[c].Args, " "))
-			log.Fatalf(color.Red("%v", err))
+			log.Fatalf("%s", color.Red("%v", err))
 		} else {
 			commands[c+1].Stdin = pipe
 		}

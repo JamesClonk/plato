@@ -26,7 +26,7 @@ func Get(key string, nvl string) string {
 func MustGet(key string) string {
 	value := os.Getenv(key)
 	if len(value) == 0 {
-		log.Fatal(color.Fail("environment variable [%s] is missing!", key))
+		log.Fatal("%s", color.Fail("environment variable [%s] is missing!", key))
 	}
 	return value
 }
@@ -57,7 +57,7 @@ func SourceFile(filename string) {
 	// now try to source file from home directory
 	usr, err := user.Current()
 	if err != nil {
-		log.Fatal(color.Red("%v", err))
+		log.Fatal("%s", color.Red("%v", err))
 	}
 	homeFile, err := os.Open(path.Join(usr.HomeDir, filename))
 	if err == nil {

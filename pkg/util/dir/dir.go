@@ -50,7 +50,7 @@ func Create(path string, mode ...os.FileMode) {
 			mode = append(mode, 0750)
 		}
 		if err := os.MkdirAll(path, mode[0]); err != nil {
-			log.Fatalf(color.Red("could not create directory [%s]: %v", color.Magenta(path), err.Error()))
+			log.Fatalf("%s", color.Red("could not create directory [%s]: %v", color.Magenta(path), err.Error()))
 		}
 		log.Debugf("created directory [%s]", color.Magenta(path))
 	}
@@ -59,7 +59,7 @@ func Create(path string, mode ...os.FileMode) {
 func Remove(path string) {
 	if Exists(path) {
 		if err := os.RemoveAll(path); err != nil {
-			log.Fatalf(color.Red("could not delete directory [%s]: %v", color.Magenta(path), err.Error()))
+			log.Fatalf("%s", color.Red("could not delete directory [%s]: %v", color.Magenta(path), err.Error()))
 		}
 		log.Debugf("removed directory [%s]", color.Magenta(path))
 	}
@@ -70,7 +70,7 @@ func Files(path string) []File {
 
 	fs, err := os.ReadDir(path)
 	if err != nil {
-		log.Fatalf(color.Red("could not read directory [%s]: %v", color.Magenta(path), err.Error()))
+		log.Fatalf("%s", color.Red("could not read directory [%s]: %v", color.Magenta(path), err.Error()))
 	}
 
 	for _, f := range fs {
@@ -92,7 +92,7 @@ func Dirs(path string) []string {
 
 	fs, err := os.ReadDir(path)
 	if err != nil {
-		log.Fatalf(color.Red("could not read directory [%s]: %v", color.Magenta(path), err.Error()))
+		log.Fatalf("%s", color.Red("could not read directory [%s]: %v", color.Magenta(path), err.Error()))
 	}
 
 	for _, f := range fs {
