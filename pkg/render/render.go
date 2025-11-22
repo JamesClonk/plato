@@ -24,6 +24,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func RenderFile(inputFile, outputFile string) {
+	log.Infof("rendering template [%s] to [%s]...", color.Magenta(inputFile), color.Cyan(outputFile))
+
+	// parse and render template file
+	baseFilename := filepath.Base(inputFile)
+	if err := writeFile(baseFilename, filepath.Dir(inputFile), outputFile, viper.AllSettings()); err != nil {
+		log.Fatalf("could not render template file [%s]: %v", color.Magenta(baseFilename), err)
+	}
+}
+
 func RenderTemplates(removeTerraformFiles, removeAllDirectories bool) {
 	log.Infof("preparing to render templates ...")
 
@@ -72,7 +82,7 @@ func RenderTemplates(removeTerraformFiles, removeAllDirectories bool) {
 		return processFile(path, info)
 	})
 	if err != nil {
-		log.Fatalf("could not render source files: %v", err)
+		log.Fatalf("could not render template files: %v", err)
 	}
 }
 
@@ -149,8 +159,8 @@ func processFile(path string, info os.FileInfo) error {
 	baseFilename := strings.TrimPrefix(path, config.DirSource()+string(os.PathSeparator))
 	renderedFilename := filepath.Join(config.DirTarget(), baseFilename)
 
-	// ensure path exists to write file to.
-	if err := os.MkdirAll(filepath.Dir(renderedFilename), 0700); err != nil { // use mode 0700, since we are rendering sensitive data
+	// ensure path exists to write file to
+	if err := os.MkdirAll(filepath.Dir(renderedFilename), 0700); err != nil { // use mode 0700, since we are likely rendering sensitive data
 		return err
 	}
 
@@ -201,14 +211,18 @@ func processFile(path string, info os.FileInfo) error {
 	}
 
 	// parse and render template
-	if err := writeFile(baseFilename, config.DirSource(), config.DirTarget(), viper.AllSettings()); err != nil {
+	if err := writeFile(baseFilename, config.DirSource(), renderedFilename, viper.AllSettings()); err != nil {
 		return fmt.Errorf("could not render [%s]: %v", color.Magenta(baseFilename), err)
 	}
 	return nil
 }
 
-func writeFile(baseFilename, sourcePath, targetPath string, data interface{}) error {
-	targetFile := filepath.Join(targetPath, baseFilename)
+func writeFile(baseFilename, sourcePath, targetFile string, data interface{}) error {
+	// ensure path exists to write file to
+	if err := os.MkdirAll(filepath.Dir(targetFile), 0700); err != nil { // use mode 0700, since we are likely rendering sensitive data
+		return err
+	}
+
 	f, err := os.Create(targetFile)
 	if err != nil {
 		log.Errorf("could not create file [%s]", color.Magenta(targetFile))
@@ -245,7 +259,7 @@ func writeFile(baseFilename, sourcePath, targetPath string, data interface{}) er
 		}
 	}
 	// safety chmod for secrets
-	if strings.Contains(baseFilename, "secrets") {
+	if strings.Contains(baseFilename, "secrets") && targetFile != "/dev/stdout" {
 		if err := command.Exec([]string{"chmod", "go-rwx", targetFile}); err != nil {
 			log.Errorf("could not chmod go-rwx [%s]", color.Magenta(targetFile))
 			return err

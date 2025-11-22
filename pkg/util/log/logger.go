@@ -12,11 +12,14 @@ import (
 )
 
 var (
-	logger *slog.Logger
+	logger   *slog.Logger
+	disabled bool
 )
 
 func Initialize() {
-	logger = newLogger(os.Stdout)
+	if !disabled {
+		logger = newLogger(os.Stdout)
+	}
 }
 
 func newLogger(writer *os.File) *slog.Logger {
@@ -43,6 +46,11 @@ func newLogger(writer *os.File) *slog.Logger {
 	//Debugf("logger created, with log_level [%v]", logLevel)
 
 	return logger
+}
+
+func Disable() {
+	disabled = true
+	logger = slog.New(slog.DiscardHandler)
 }
 
 func Info(format string, args ...interface{}) {

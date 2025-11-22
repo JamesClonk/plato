@@ -23,6 +23,26 @@ func init() {
 	dir.Create(config.DirTarget())
 }
 
+func Test_RenderFile(t *testing.T) {
+	sourceFile := "input/minio.yaml"
+	targetFile := "tmp/test/minio.yaml"
+	targetFolder := "tmp/test"
+
+	assert.False(t, file.Exists(targetFile))
+	assert.False(t, dir.Exists(targetFolder))
+
+	RenderFile(sourceFile, targetFile)
+	assert.True(t, file.Exists(targetFile))
+	assert.True(t, dir.Exists(targetFolder))
+
+	data := file.Read(targetFile)
+	assert.Equal(t, `---
+minio:
+  accessKey: "2c70944d-26ba-49ac-9e9c-48d938ab38f6"
+  secretKey: "0b29d2151b403f7cabd26c6a107a96fdf3b4ba3c12521e2e4a3168d5e6e08bb0"
+`, data)
+}
+
 func Test_RenderTemplates(t *testing.T) {
 	targetFileA := "output/infrastructure/terraform/.terraform.lock.hcl"
 	targetFileB := "output/infrastructure/terraform/.terraform/some-file"
@@ -111,8 +131,7 @@ func Test_writeFile_with_custom_funcmaps(t *testing.T) {
 	payload["cidr"] = "100.106.160.64/26"
 
 	filename := "infrastructure/terraform/settings/22_folder_test.yaml"
-	_ = os.MkdirAll(filepath.Dir(filepath.Join(config.DirTarget(), filename)), 0700)
-	err := writeFile(filename, config.DirSource(), config.DirTarget(), payload)
+	err := writeFile(filename, config.DirSource(), filepath.Join(config.DirTarget(), filename), payload)
 	assert.NoError(t, err)
 
 	data := file.Read(filepath.Join(config.DirTarget(), filename))
@@ -133,8 +152,7 @@ spec:
 `, data)
 
 	filename = "infrastructure/terraform/cidr.yaml"
-	_ = os.MkdirAll(filepath.Dir(filepath.Join(config.DirTarget(), filename)), 0700)
-	err = writeFile(filename, config.DirSource(), config.DirTarget(), payload)
+	err = writeFile(filename, config.DirSource(), filepath.Join(config.DirTarget(), filename), payload)
 	assert.NoError(t, err)
 
 	data = file.Read(filepath.Join(config.DirTarget(), filename))

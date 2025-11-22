@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/JamesClonk/plato/pkg/config"
 	"github.com/JamesClonk/plato/pkg/store"
 	"github.com/spf13/cobra"
 )
@@ -17,6 +18,7 @@ By convention the filenames under 'plato.secrets'/* will translate into YAML pat
 It will also re-encrypt all formerly named *.sops_enc files back to their original location under 'plato.source'.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
+		config.InitConfig()
 		store.StoreGeneratedSecrets()
 	},
 }

@@ -70,6 +70,16 @@ release:
 # ======================================================================================================================
 # individual commands for testing
 # ======================================================================================================================
+.PHONY: plato-file-stdout
+## plato-file-stdout: renders a template file into STDOUT
+plato-file-stdout:
+	source .env*; PLATO_WORKING_DIR=_fixtures SOPS_AGE_KEY_FILE=age.key go run -race main.go file input/minio.yaml
+
+.PHONY: plato-file-output
+## plato-file-output: renders a template file into an output file
+plato-file-output:
+	source .env*; PLATO_WORKING_DIR=_fixtures SOPS_AGE_KEY_FILE=age.key go run -race main.go file input/minio.yaml tmp/minio.yaml
+
 .PHONY: plato-render
 ## plato-render: renders all templates
 plato-render:
@@ -79,6 +89,11 @@ plato-render:
 ## plato-store-secrets: stores secrets back into SOPS file
 plato-store-secrets: plato-render
 	source .env*; PLATO_WORKING_DIR=_fixtures SOPS_AGE_KEY_FILE=age.key go run -race main.go store-secrets
+
+.PHONY: plato-version
+## plato-version: displays PLATO version
+plato-version:
+	source .env*; PLATO_WORKING_DIR=_fixtures SOPS_AGE_KEY_FILE=age.key go run -race main.go version
 
 .PHONY: vault-run
 ## vault-run: runs vault locally in dev mode

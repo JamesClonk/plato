@@ -3,7 +3,6 @@ package cmd
 import (
 	"os"
 
-	"github.com/JamesClonk/plato/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -24,15 +23,6 @@ func Execute(v, c, d string) {
 	version = v
 	commit = c
 	date = d
-
-	// setup shell completion
-	for _, cmd := range rootCmd.Commands() {
-		if cmd.Use != "completion" {
-			cmd.PreRun = func(cmd *cobra.Command, args []string) {
-				config.InitConfig()
-			}
-		}
-	}
 
 	// execute CLI
 	err := rootCmd.Execute()
