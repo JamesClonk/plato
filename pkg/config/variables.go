@@ -8,8 +8,8 @@ import (
 
 var (
 	dirSource           = "templates"
-	dirTarget           = "output"
-	dirGeneratedSecrets = "output/secrets"
+	dirTarget           = "rendered"
+	dirGeneratedSecrets = "rendered/secrets"
 	delimiterLeft       = "{{{"
 	delimiterRight      = "}}}"
 )

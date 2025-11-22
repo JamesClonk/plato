@@ -12,7 +12,7 @@ var storeCmd = &cobra.Command{
 	Long: `Stores all dynamically generated secrets found under 'plato.secrets' back into the encrypted SOPS secret file. Property paths are determined by naming convention.
 
 By convention the filenames under 'plato.secrets'/* will translate into YAML paths, for example:
-./output/secrets/tls.key -> "tls.key:" in secrets.yaml
+./rendered/secrets/tls.key -> "tls.key:" in secrets.yaml
 
 It will also re-encrypt all formerly named *.sops_enc files back to their original location under 'plato.source'.
 	`,

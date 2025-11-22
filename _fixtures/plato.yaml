@@ -1,0 +1,23 @@
+---
+plato:
+  log_level: debug
+  source: input # optional, default is "templates"
+  target: output # default is "rendered"
+  secrets: output/secrets # default is "rendered/secrets"
+
+# ----------------------------------------------------------------------------------------------------------------------
+# anything not "$.plato" will be used as standard payload for template rendering,
+# merged together with secrets.yaml
+# ----------------------------------------------------------------------------------------------------------------------
+kubernetes:
+  server: https://my.super.kubernetes.cluster:6443
+  metallb:
+    bgp_config:
+      my_asn: 65477
+      peer_asn: 4777444999
+
+ssh:
+  public_key: |
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMmROMaltL5DRYCYNHW9BE2BTZWUqZ3dISyzZopyrRjg
+
+cidr: 100.200.100.64/26
