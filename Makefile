@@ -55,6 +55,18 @@ vendor:
 	go mod tidy
 	go mod vendor
 
+.PHONY: release-test
+## release-test: run a test release with goreleaser
+release-test:
+	@echo "Testing goreleaser ..."
+	goreleaser release --clean --skip=announce,publish,validate
+
+.PHONY: release
+## release: publish a release with goreleaser
+release:
+	@echo "Running goreleaser ..."
+	goreleaser release --clean
+
 # ======================================================================================================================
 # individual commands for testing
 # ======================================================================================================================

@@ -42,3 +42,8 @@ changelog:
     exclude:
     - "^docs:"
     - "^test:"
+
+release:
+  github:
+    owner: JamesClonk
+    name: plato
