@@ -1,0 +1,15 @@
+{{{- PLATO -}}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    my.super.kubernetes.cluster/component: test-ingress
+    my.super.kubernetes.cluster/subdomain: {{{ base (dir filepath) }}}
+  name: test-ingress
+spec:
+  rules:
+  - host: {{{ base (dir filepath) }}}.{{{ (split ":" (index (urlParse .kubernetes.server) "host"))._0 }}}
+  tls:
+  - hosts:
+    - {{{ base (dir filepath) }}}.{{{ (split ":" (index (urlParse .kubernetes.server) "host"))._0 }}}

@@ -1,0 +1,7 @@
+{{{- PLATO -}}}
+---
+apiVersion: super.cluster.io/v1
+kind: CustomResource
+metadata:
+  kubernetes:
+{{{ indent 4 (ToYAML .kubernetes 2) -}}}

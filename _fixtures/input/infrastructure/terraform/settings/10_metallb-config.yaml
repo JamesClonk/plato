@@ -1,0 +1,48 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: cluster
+  namespace: metallb-system
+spec:
+  addresses:
+  - {{{ .cidr }}}
+
+---
+apiVersion: metallb.io/v1beta1
+kind: BFDProfile
+metadata:
+  name: cluster
+  namespace: metallb-system
+spec: {}
+  # receiveInterval: 380
+  # transmitInterval: 270
+
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: cluster
+  namespace: metallb-system
+spec:
+  myASN: {{{ .kubernetes.metallb.bgp_config.my_asn }}}
+  peerASN: {{{ .kubernetes.metallb.bgp_config.peer_asn }}}
+  peerAddress: 1.1.1.1
+  sourceAddress: {{{ IPofCIDR .cidr 1 }}}
+  routerID: 0.0.0.0
+  password: {{{ .kubernetes.metallb.bgp_config.password }}}
+  bfdProfile: cluster
+  ebgpMultiHop: true
+  nodeSelectors:
+  - matchLabels:
+      kubernetes.io/hostname: cluster-control-plane
+
+---
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: cluster
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - cluster

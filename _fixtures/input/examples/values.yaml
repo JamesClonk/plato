@@ -1,0 +1,24 @@
+{{{- PLATO -}}} # note: this PLATO header is optional, it will simply vanished during rendering. Its only purpose is to prevent this file being mistaken for an already rendereded, final file.
+---
+image_pull_secret: |-
+  {
+    "auths": {
+      "super.kubernetes.cluster": {
+        "auth": "????????????????????????????????"
+      },
+      "quay.io": {
+        "auth": "????????????????????????????????",
+        "email": ""
+      }
+    }
+  }
+
+minio:
+  server_ip: {{{ IPofCIDR .cidr 10 }}}
+  storageClass: minio
+  storeSize: "200Gi"
+  credentials:
+    accessKey: "{{{ .minio.access_key }}}"
+    secretKey: "{{{ .minio.secret_key }}}"
+  backup:
+    enabled: false

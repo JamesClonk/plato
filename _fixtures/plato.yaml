@@ -16,6 +16,10 @@ kubernetes:
       my_asn: 65477
       peer_asn: 4777444999
 
+registry:
+  hostname: my.container.registry
+  port: 5000
+
 ssh:
   public_key: |
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMmROMaltL5DRYCYNHW9BE2BTZWUqZ3dISyzZopyrRjg

@@ -1,0 +1,2 @@
+---
+ip: {{{ IPofCIDR .cidr 13 }}}
