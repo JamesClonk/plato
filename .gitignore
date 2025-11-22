@@ -67,3 +67,6 @@ go.work.sum
 *.tgz
 *.gz
 *.tar
+
+# Added by goreleaser init:
+dist/

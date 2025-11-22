@@ -7,13 +7,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	version string
+	commit  string
+	date    string
+)
+
 var rootCmd = &cobra.Command{
 	Use:   "plato",
 	Short: "SOPS Template Renderer - CLI",
 	Long:  `The plato CLI tool is used to render template files with automatic SOPS secret injection.`,
 }
 
-func Execute() {
+func Execute(v, c, d string) {
+	// store build information
+	version = v
+	commit = c
+	date = d
+
 	// setup shell completion
 	for _, cmd := range rootCmd.Commands() {
 		if cmd.Use != "completion" {
