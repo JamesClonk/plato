@@ -78,7 +78,7 @@ plato-file-stdout:
 .PHONY: plato-file-output
 ## plato-file-output: renders a template file into an output file
 plato-file-output:
-	source .env*; PLATO_WORKING_DIR=_fixtures SOPS_AGE_KEY_FILE=age.key go run -race main.go file input/minio.yaml tmp/minio.yaml
+	source .env*; PLATO_WORKING_DIR=_fixtures SOPS_AGE_KEY_FILE=age.key go run -race main.go file input/minio.yaml tmp/test/minio.yaml
 
 .PHONY: plato-render
 ## plato-render: renders all templates
