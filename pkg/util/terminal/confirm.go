@@ -12,7 +12,7 @@ func Confirm(question string) bool {
 	fmt.Printf("%s (y|n)\n> ", question)
 	var response string
 	if _, err := fmt.Scanln(&response); err != nil {
-		log.Fatalf("Cannot parse input: %s", color.Red("%v", err))
+		log.Fatalf("cannot parse input: %s", color.Red("%v", err))
 	}
 	return strings.ToLower(response) == "y" || strings.ToLower(response) == "yes"
 }

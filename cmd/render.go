@@ -12,9 +12,9 @@ var (
 
 var renderCmd = &cobra.Command{
 	Use:   "render [OPTIONS]",
-	Short: "Render all template files and inject secrets",
-	Long: `Render all template files from 'plato.source' into 'plato.target',
-and also inject all configuration data and secrets from plato.yaml, secrets.yaml and further files.
+	Short: "Renders all template files and inject secrets",
+	Long: `Renders all template files from 'plato.source' into 'plato.target',
+and also injects all configuration data and secrets from plato.yaml, secrets.yaml and further files.
 The secrets are automatically decrypted on the fly via SOPS.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		render.RenderTemplates(removeTerraformFiles, removeAllDirectories)

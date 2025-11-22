@@ -41,7 +41,7 @@ func RunOutputInDir(command []string, dir string) string {
 func execOutput(cmd *xc.Cmd) (string, error) {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Debugf("Failed command: %v", strings.Join(cmd.Args, " "))
+		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
 		return string(output), err
 	}
 	return string(output), nil
@@ -50,7 +50,7 @@ func execOutput(cmd *xc.Cmd) (string, error) {
 func runOutput(cmd *xc.Cmd) string {
 	output, err := execOutput(cmd)
 	if err != nil {
-		log.Debugf("Failed command: %v", strings.Join(cmd.Args, " "))
+		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
 		log.Errorf(color.Red("%s", output))
 		log.Fatalf(color.Red("%v", err))
 	}
@@ -80,14 +80,14 @@ func exec(cmd *xc.Cmd) error {
 
 	err := cmd.Run()
 	if err != nil {
-		log.Debugf("Failed command: %v", strings.Join(cmd.Args, " "))
+		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
 	}
 	return err
 }
 
 func run(cmd *xc.Cmd) {
 	if err := exec(cmd); err != nil {
-		log.Fatalf("Failed command: %s", color.Red("%v", err))
+		log.Fatalf("failed command: %s", color.Red("%v", err))
 	}
 }
 
@@ -117,27 +117,27 @@ func execWithLogfiles(cmd *xc.Cmd, logfile, errfile string) error {
 
 	err = cmd.Run()
 	if err != nil {
-		log.Debugf("Failed command: %v", strings.Join(cmd.Args, " "))
+		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
 	}
 	return err
 }
 
 func runWithLogfiles(cmd *xc.Cmd, logfile, errfile string) {
 	if err := execWithLogfiles(cmd, logfile, errfile); err != nil {
-		log.Debugf("Failed command: %v", strings.Join(cmd.Args, " "))
+		log.Debugf("failed command: %v", strings.Join(cmd.Args, " "))
 		log.Fatalf(color.Red("%v", err))
 	}
 }
 
 func RunPiped(commands ...*xc.Cmd) string {
 	if len(commands) < 1 {
-		log.Fatalf(color.Fail("Not enough commands passed to RunPiped()"))
+		log.Fatalf(color.Fail("not enough commands passed to RunPiped()"))
 	}
 	var stdout bytes.Buffer
 
 	for c := range commands[:len(commands)-1] {
 		if pipe, err := commands[c].StdoutPipe(); err != nil {
-			log.Debugf("Failed command: %v", strings.Join(commands[c].Args, " "))
+			log.Debugf("failed command: %v", strings.Join(commands[c].Args, " "))
 			log.Fatalf(color.Red("%v", err))
 		} else {
 			commands[c+1].Stdin = pipe

@@ -26,7 +26,7 @@ func Get(key string, nvl string) string {
 func MustGet(key string) string {
 	value := os.Getenv(key)
 	if len(value) == 0 {
-		log.Fatal(color.Fail("ENV variable [%s] is missing!", key))
+		log.Fatal(color.Fail("environment variable [%s] is missing!", key))
 	}
 	return value
 }

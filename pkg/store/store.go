@@ -16,7 +16,7 @@ import (
 )
 
 func StoreGeneratedSecrets() {
-	log.Infof("Storing secrets back into [%s] ...", color.Magenta("secrets.yaml"))
+	log.Infof("storing secrets back into [%s] ...", color.Magenta("secrets.yaml"))
 
 	// re-encrypt all former .sops_enc files back to their original location
 	err := filepath.Walk(config.DirSource(), func(path string, info os.FileInfo, err error) error {
@@ -36,7 +36,7 @@ func StoreGeneratedSecrets() {
 			// check if content has changed, no need to re-encrypt the file back otherwise (avoids unnecessary git spam)
 			decrypted, err := command.ExecOutput([]string{"sops", "-d", path})
 			if err != nil {
-				log.Errorf("Could not decrypt file [%s]", color.Magenta(path))
+				log.Errorf("could not decrypt file [%s]", color.Magenta(path))
 				return err
 			}
 			if decrypted == file.Read(renderedFilename) {
@@ -44,10 +44,10 @@ func StoreGeneratedSecrets() {
 				return nil
 			}
 
-			log.Debugf("Encrypt file [%s] into [%s]", color.Magenta(renderedFilename), color.Magenta(path))
+			log.Debugf("encrypt file [%s] into [%s]", color.Magenta(renderedFilename), color.Magenta(path))
 			data, err := command.ExecOutput([]string{"sops", "-e", "--input-type", "binary", renderedFilename})
 			if err != nil {
-				log.Errorf("Could not encrypt file [%s]", color.Magenta(renderedFilename))
+				log.Errorf("could not encrypt file [%s]", color.Magenta(renderedFilename))
 				return err
 			}
 			file.Write(path, data)
@@ -55,7 +55,7 @@ func StoreGeneratedSecrets() {
 		return nil
 	})
 	if err != nil {
-		log.Fatalf("Could not re-encrypt *.sops_enc files from [%s]: %v", color.Magenta(config.DirSource()), err)
+		log.Fatalf("could not re-encrypt *.sops_enc files from [%s]: %v", color.Magenta(config.DirSource()), err)
 	}
 
 	// go through all */secrets files
@@ -71,7 +71,7 @@ func StoreGeneratedSecrets() {
 			return processFile(path, info) // store file contents back into secrets.yaml
 		})
 		if err != nil {
-			log.Fatalf("Could not work through [%s]: %v", color.Magenta(config.DirGeneratedSecrets()), err)
+			log.Fatalf("could not work through [%s]: %v", color.Magenta(config.DirGeneratedSecrets()), err)
 		}
 	}
 
@@ -114,9 +114,9 @@ func processFile(path string, info os.FileInfo) error {
 	value = fmt.Sprintf("%s \"%s\"", value, data)
 
 	// set value in-place
-	log.Debugf("Store secret [%s]", color.Magenta(filename))
+	log.Debugf("store secret [%s]", color.Magenta(filename))
 	if err := command.Exec([]string{"sops", "--set", value, "secrets.yaml"}); err != nil {
-		log.Errorf("Could not store secret [%s]", color.Magenta(filename))
+		log.Errorf("could not store secret [%s]", color.Magenta(filename))
 		return err
 	}
 	return nil

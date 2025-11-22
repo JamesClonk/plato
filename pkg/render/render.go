@@ -25,7 +25,7 @@ import (
 )
 
 func RenderTemplates(removeTerraformFiles, removeAllDirectories bool) {
-	log.Infof("Preparing to render templates ...")
+	log.Infof("preparing to render templates ...")
 
 	// fail if temporary .secrets-updated marker file / gitrepo taint exists
 	if file.Exists(".secrets-updated") {
@@ -53,7 +53,7 @@ func RenderTemplates(removeTerraformFiles, removeAllDirectories bool) {
 			return file.Delete(path)
 		})
 		if err != nil {
-			log.Fatalf("Could not cleanup existing rendered files: %v", err)
+			log.Fatalf("could not cleanup existing rendered files: %v", err)
 		}
 	}
 
@@ -72,7 +72,7 @@ func RenderTemplates(removeTerraformFiles, removeAllDirectories bool) {
 		return processFile(path, info)
 	})
 	if err != nil {
-		log.Fatalf("Could not render source files: %v", err)
+		log.Fatalf("could not render source files: %v", err)
 	}
 }
 
@@ -92,17 +92,17 @@ func platoHeader() string {
 func semverCheck(version string, constraint string, message ...string) bool {
 	v, err := semver.NewVersion(strings.TrimPrefix(version, "v"))
 	if err != nil {
-		log.Fatalf("Invalid semver version [%s]: %v", version, err)
+		log.Fatalf("invalid semver version [%s]: %v", version, err)
 	}
 	c, err := semver.NewConstraint(constraint)
 	if err != nil {
-		log.Fatalf("Invalid semver constraint [%s]: %v", constraint, err)
+		log.Fatalf("invalid semver constraint [%s]: %v", constraint, err)
 	}
 
 	check := c.Check(v)
 	if check && len(message) > 0 {
 		for _, m := range message {
-			log.Errorf("Semver check passed: %s", color.Red(m))
+			log.Errorf("semver check passed: %s", color.Red(m))
 		}
 	}
 	return check
@@ -111,7 +111,7 @@ func semverCheck(version string, constraint string, message ...string) bool {
 func ipOfCIDR(cidr string, pos int) string {
 	_, c, err := net.ParseCIDR(cidr)
 	if err != nil {
-		log.Fatalf("Could not parse CIDR [%s]: %v", cidr, err)
+		log.Fatalf("could not parse CIDR [%s]: %v", cidr, err)
 	}
 
 	for i := 0; i < pos; i++ {
@@ -165,10 +165,10 @@ func processFile(path string, info os.FileInfo) error {
 
 		relativePath, err := filepath.Rel(filepath.Dir(renderedFilename), path)
 		if err != nil {
-			return fmt.Errorf("Could not calculate path of symlink [%s]: %v", color.Magenta(renderedFilename), err)
+			return fmt.Errorf("could not calculate path of symlink [%s]: %v", color.Magenta(renderedFilename), err)
 		}
 		if err := os.Symlink(relativePath, renderedFilename); err != nil {
-			return fmt.Errorf("Could not create symlink [%s]: %v", color.Magenta(renderedFilename), err)
+			return fmt.Errorf("could not create symlink [%s]: %v", color.Magenta(renderedFilename), err)
 		}
 		return nil
 	}
@@ -182,7 +182,7 @@ func processFile(path string, info os.FileInfo) error {
 	// if its a normal symlink then we copy it unmodified as-is
 	if !info.Mode().IsRegular() && info.Mode()&fs.ModeSymlink != 0 {
 		file.CopySymlink(path, renderedFilename)
-		log.Debugf("Copied symlink from [%s] to [%s]", color.Magenta(path), color.Magenta(renderedFilename))
+		log.Debugf("copied symlink from [%s] to [%s]", color.Magenta(path), color.Magenta(renderedFilename))
 		return nil
 	}
 
@@ -190,10 +190,10 @@ func processFile(path string, info os.FileInfo) error {
 	if filepath.Ext(path) == ".sops_enc" {
 		renderedFilename = strings.TrimSuffix(renderedFilename, ".sops_enc")
 
-		log.Debugf("Decrypt file [%s] into [%s]", color.Magenta(path), color.Magenta(renderedFilename))
+		log.Debugf("decrypt file [%s] into [%s]", color.Magenta(path), color.Magenta(renderedFilename))
 		data, err := command.ExecOutput([]string{"sops", "-d", path})
 		if err != nil {
-			log.Errorf("Could not decrypt file [%s]", color.Magenta(path))
+			log.Errorf("could not decrypt file [%s]", color.Magenta(path))
 			return err
 		}
 		file.Write(renderedFilename, data)
@@ -202,7 +202,7 @@ func processFile(path string, info os.FileInfo) error {
 
 	// parse and render template
 	if err := writeFile(baseFilename, config.DirSource(), config.DirTarget(), viper.AllSettings()); err != nil {
-		return fmt.Errorf("Could not render [%s]: %v", color.Magenta(baseFilename), err)
+		return fmt.Errorf("could not render [%s]: %v", color.Magenta(baseFilename), err)
 	}
 	return nil
 }
@@ -211,7 +211,7 @@ func writeFile(baseFilename, sourcePath, targetPath string, data interface{}) er
 	targetFile := filepath.Join(targetPath, baseFilename)
 	f, err := os.Create(targetFile)
 	if err != nil {
-		log.Errorf("Could not create file [%s]", color.Magenta(targetFile))
+		log.Errorf("could not create file [%s]", color.Magenta(targetFile))
 		return err
 	}
 	defer f.Close()
@@ -227,27 +227,27 @@ func writeFile(baseFilename, sourcePath, targetPath string, data interface{}) er
 	// parse template
 	tmpl, err = tmpl.Parse(file.Read(filepath.Join(sourcePath, baseFilename)))
 	if err != nil {
-		log.Errorf("Could not parse template [%s]", color.Magenta(baseFilename))
+		log.Errorf("could not parse template [%s]", color.Magenta(baseFilename))
 		return err
 	}
 
 	// use template, write output file
 	if err := tmpl.Execute(w, data); err != nil {
-		log.Errorf("Could not execute template [%s]", color.Magenta(baseFilename))
+		log.Errorf("could not execute template [%s]", color.Magenta(baseFilename))
 		return err
 	}
 
 	// chmod +x *.sh
 	if filepath.Ext(targetFile) == ".sh" {
 		if err := command.Exec([]string{"chmod", "+x", targetFile}); err != nil {
-			log.Errorf("Could not chmod+x [%s]", color.Magenta(targetFile))
+			log.Errorf("could not chmod+x [%s]", color.Magenta(targetFile))
 			return err
 		}
 	}
 	// safety chmod for secrets
 	if strings.Contains(baseFilename, "secrets") {
 		if err := command.Exec([]string{"chmod", "go-rwx", targetFile}); err != nil {
-			log.Errorf("Could not chmod go-rwx [%s]", color.Magenta(targetFile))
+			log.Errorf("could not chmod go-rwx [%s]", color.Magenta(targetFile))
 			return err
 		}
 	}
