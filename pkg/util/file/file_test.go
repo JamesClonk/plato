@@ -13,8 +13,8 @@ func init() {
 }
 
 func Test_File_SHA1(t *testing.T) {
-	assert.Equal(t, "ee0fce81001f723072c97d89fd0cb19c5ff17790", SHA1("../main.go"))
-	assert.Equal(t, "da34fc90790bcaf0fc8ac48bb56307675d6aee151000386046b113540c31e99d", SHA256("../main.go"))
+	assert.Equal(t, "e478c6c055f8d780b2c3e760144b445e2ebef73f", SHA1("../main.go"))
+	assert.Equal(t, "01627f3c6730f54ae8da947408b77ec6350624eadf1b01fbc800695a7365bd93", SHA256("../main.go"))
 }
 
 func Test_File_Read(t *testing.T) {
@@ -39,5 +39,5 @@ func Test_File_ReadLines(t *testing.T) {
 	expected := `func main() {
 	cmd.Execute()
 }`
-	assert.Equal(t, expected, strings.Join(lines[4:6], "\n"))
+	assert.Equal(t, expected, strings.Join(lines[4:7], "\n"))
 }

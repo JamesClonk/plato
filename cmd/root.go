@@ -13,7 +13,7 @@ var rootCmd = &cobra.Command{
 	Long:  `The plato CLI tool is used to render template files with automatic SOPS secret injection.`,
 }
 
-func Execute(v, bs, gh string) {
+func Execute() {
 	// setup shell completion
 	for _, cmd := range rootCmd.Commands() {
 		if cmd.Use != "completion" {
