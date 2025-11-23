@@ -25,7 +25,7 @@ func init() {
 
 	os.Setenv("SOPS_AGE_KEY_FILE", "age.key")
 	config.InitConfig()
-	config.InitSecrets()
+	config.LoadSecrets()
 
 	seed, _ := strconv.ParseInt(strings.Trim(command.RunOutput([]string{"date", `+%s%N`}), "\n"), 10, 64)
 	rand.Seed(seed)
@@ -127,7 +127,7 @@ users:
 	// reset viper, to be absolutely sure the payload got written correctly
 	viper.Reset()
 	viper.SetConfigType("yaml")
-	config.InitSecrets()
+	config.LoadSecrets()
 	assert.Equal(t, data, viper.GetString("test.myconfig"))
 }
 
@@ -157,6 +157,6 @@ func Test_processFile_filetype_exclusion(t *testing.T) {
 	// reset viper, to be absolutely sure the payload did not get written back
 	viper.Reset()
 	viper.SetConfigType("yaml")
-	config.InitSecrets()
+	config.LoadSecrets()
 	assert.Equal(t, "", viper.GetString("test.md"))
 }

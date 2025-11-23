@@ -18,7 +18,7 @@ func init() {
 	log.Initialize()
 	os.Setenv("SOPS_AGE_KEY_FILE", "age.key")
 	config.InitConfig()
-	config.InitSecrets()
+	config.LoadSecrets()
 	dir.Remove(config.DirTarget())
 	dir.Create(config.DirTarget())
 }
@@ -28,6 +28,7 @@ func Test_RenderFile(t *testing.T) {
 	targetFile := "tmp/test/minio.yaml"
 	targetFolder := "tmp/test"
 
+	_ = os.RemoveAll(targetFolder)
 	assert.False(t, file.Exists(targetFile))
 	assert.False(t, dir.Exists(targetFolder))
 
