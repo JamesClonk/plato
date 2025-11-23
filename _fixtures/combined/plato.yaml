@@ -1,0 +1,25 @@
+plato:
+  log_level: ENC[AES256_GCM,data:SKQgFNg=,iv:8WB1wDP9/i6g+Ez02ujkOTkIa/DTFICSuXftOokL1qk=,tag:C0jgglfWXCdjU1uLVg1Xlw==,type:str]
+ssh:
+  public_key: ENC[AES256_GCM,data:/DGMYT/QxsZ0iZXvogF07tedp+mGglfI3c6u382UPFr1PmlImnQw5EjMsXlXX9vpud3q4T1qMz3HumoNR1Si/IL6q8T4p4vXcTfZpFnjaqFD,iv:5TFCHcHXftH7Vgpyslnt9aWBlcWzDyhTuiEbJ6G5ixc=,tag:/iRI7nW+4ZzjlygO890Tgw==,type:str]
+  private_key: ENC[AES256_GCM,data:nKvUW+oi3ApYMCw1Nvub9qPj5X9rzjmWrid3CfZZjmtRUamAmC4S9Y97Hluxw5wC09c3TykF351V35i8L3xdnnpXAavmLOQXbcL2pxzAIA9Fo8HNyPaPQpAWbOJY7bAAypgCaWAqnaMdf4dcOQIRHEG7Z4vzZWgSfcOo8h7cKRdW/5gdxvRl8gKChIkLy4fCVENzbhSnPvwZVOS66bQ5J3Yahy9SwNU84yIpM9VyeVFZoD2EOwBZgnpOFXu/MwlFrIhGAdVW38fhsQFpJPua9gqSZ5Zcq51v5zp8W3qzP7W6VploG/wnAisNpXrHXNsXVs8W5i2sf7SyUDLtBMMCKI3hS+IGZNW5K5ZCOYGBDurS60xPdymT8jwv3/LHATzaWctnCcEhF2fuOPlHnSXHnf1jbWQc/q8DpBbqaBdYtbaZL0sbthUPGqTzUqAY0OjAdP8X374OlscTywEs1dYKO71w2B5XD1OF/HTkoOx3/wfvu1rj26sZB96EJp6O/i4xwu7qTmAgylS4TnZZVPFHuS+8lSedmkiDlHEM,iv:kdnoDXZEM6mJxRpuH5PLEV2q+I77bNBIwXT4wS9XZW8=,tag:Ue324Uc6jH/3ndO9A5BD6A==,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1yapc0k0tfz8cketuldrjq3vyuzne4587zmf3d2ejypaftg95yvrs8r44yh
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBxSmN0VVZMN0FNUnR4TXB4
+        S0Y0bTBHUnBTaVBkSG5WUlIybkx0Yk4xd21ZClVPMEY5NzVmeCtnUnc3YVVIRS9k
+        VXdSZTlGSjNrSG9GbjRyZUg4V3pSZjgKLS0tIDhtTDlrczhxZzIvMTZjQjY5Yndx
+        MG13TjRPb3BFZjlsRUhQQ2RkTGlOMTAK6QnOh/mbffk2RtPu5idhiXKTEYJOh7Zh
+        R/aTsyunsDxRhDfqs/lTf+YLMYVvLF4FfI/oZjIk+AXZbhqyr8kB3Q==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-11-23T10:48:15Z"
+  mac: ENC[AES256_GCM,data:abrEDbNPGNSkwEU5xtD1s0C04Sc7NSWVcvm+egL/eMynO2jjNMoX/8cQpvuuW7Xjd9DKs+2VyMXTx/MgVMPbXM92TJGZ/QUhwjyjvEWYeq9YMb48EcGm0YZunGBRaDhmf1gV0vqsGpOS5d58nUxxweBWbIfVVX4W/k8mo3F0P78=,iv:MIyLGH/rPFppINGNgWrKOeQ345CbaLivKQOpndF7LuU=,tag:QI3vz1Y7PvVIS22Fq6KcEw==,type:str]
+  pgp: []
+  unencrypted_suffix: _unencrypted
+  version: 3.9.1

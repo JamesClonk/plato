@@ -70,6 +70,16 @@ release:
 # ======================================================================================================================
 # individual commands for testing
 # ======================================================================================================================
+.PHONY: plato-combined-stdout
+## plato-combined-stdout: renders a template file into STDOUT, using an encrypted plato.yaml
+plato-combined-stdout:
+	source .env*; PLATO_WORKING_DIR=_fixtures/combined SOPS_AGE_KEY_FILE=../age.key go run -race main.go file ssh_private_key
+
+.PHONY: plato-combined-output
+## plato-combined-output: renders a template file into an output file, using an encrypted plato.yaml
+plato-combined-output:
+	source .env*; PLATO_WORKING_DIR=_fixtures/combined SOPS_AGE_KEY_FILE=../age.key go run -race main.go file ssh_private_key tmp/ssh_private_key
+
 .PHONY: plato-file-stdout
 ## plato-file-stdout: renders a template file into STDOUT
 plato-file-stdout:

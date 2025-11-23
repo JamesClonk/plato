@@ -53,7 +53,7 @@ func InitConfig() {
 			log.Fatalf("could not change working directory to [%s]: %s", pwd, color.Red("%v", err))
 		}
 	}
-	log.Debugf("current working directory: [%s]", color.Magenta(pwd))
+	log.Infof("current working directory: [%s]", color.Magenta(pwd))
 
 	// configure Viper
 	viper.SetConfigType("yaml")
@@ -71,34 +71,50 @@ func InitConfig() {
 		log.Fatalf("could not read configuration file: %s", color.Red("%v", err))
 	}
 
+	// decrypt and/or load secrets
+	LoadSecrets()
+
 	// properly re-initialize logger again, we now have the correct intended configuration values available
 	log.Initialize()
 
-	// now load secrets
-	InitSecrets()
-
-	log.Infof("plato configuration loaded")
+	log.Infof("plato configuration loaded and ready")
 }
 
 // load secrets into config
-func InitSecrets() {
-	if !file.Exists("secrets.yaml") {
-		log.Debugf("could not detect location of [%s], cannot load any secrets!", color.Magenta("secrets.yaml"))
-		return
+func LoadSecrets() {
+	requireSecretsYAML := true
+
+	// check first if plato.yaml itself actually is SOPS-encrypted
+	if viper.IsSet("sops.version") && viper.IsSet("sops.mac") && viper.IsSet("sops.age") {
+		requireSecretsYAML = false // we don't require an additional secrets.yaml in this case
+		loadSecrets(viper.ConfigFileUsed())
 	}
 
-	// we should be already in the same dir as plato.yaml, secrets.yaml MUST be located here too!
-	// decrypt secrets on the fly
-	decryptedSecrets, err := command.ExecOutput([]string{"sops", "-d", "secrets.yaml"})
+	pwd, err := os.Getwd()
 	if err != nil {
-		log.Errorf("could not decrypt [%s] via SOPS: %s", color.Magenta("secrets.yaml"), color.Red("%v", err))
+		log.Fatalf("could not read current working directory: %s", color.Red("%v", err))
+	}
+	secretsFile := filepath.Join(pwd, "secrets.yaml")
+	if !file.Exists(secretsFile) {
+		if requireSecretsYAML {
+			log.Errorf("[%s] does not exist, cannot load any additional secrets!", color.Magenta(secretsFile))
+		}
 		return
 	}
+	loadSecrets(secretsFile)
+}
 
+func loadSecrets(inputFile string) {
+	// decrypt file
+	decryptedSecrets, err := command.ExecOutput([]string{"sops", "-d", inputFile})
+	if err != nil {
+		log.Errorf("could not decrypt [%s] with SOPS: %s", color.Magenta(inputFile), color.Red("%v", err))
+		return
+	}
 	// read in decrypted secrets
 	if err := viper.MergeConfig(strings.NewReader(decryptedSecrets)); err == nil {
-		log.Debugf("loaded secrets from [%s]", color.Magenta("secrets.yaml"))
+		log.Infof("loaded secrets from [%s]", color.Magenta(inputFile))
 	} else { // fail if no secrets.yaml was found, plato insists on it!
-		log.Fatalf("could not load secrets: %s", color.Red("%v", err))
+		log.Fatalf("could not load secrets from [%s]: %s", color.Magenta(inputFile), color.Red("%v", err))
 	}
 }

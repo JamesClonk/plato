@@ -58,6 +58,9 @@ go.work.sum
 /_fixtures/tmp
 /_fixtures/output
 /_fixtures/rendered
+/_fixtures/combined/tmp
+/_fixtures/combined/output
+/_fixtures/combined/rendered
 
 # logfiles
 *.log
