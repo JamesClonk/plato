@@ -241,17 +241,24 @@ func processFile(path string, info os.FileInfo) error {
 }
 
 func writeFile(baseFilename, sourcePath, targetFile string, data interface{}) error {
-	// ensure path exists to write file to
-	if err := os.MkdirAll(filepath.Dir(targetFile), 0700); err != nil { // use mode 0700, since we are likely rendering sensitive data
-		return err
-	}
+	var f *os.File
+	var err error
 
-	f, err := os.Create(targetFile)
-	if err != nil {
-		log.Errorf("could not create file [%s]", color.Magenta(targetFile))
-		return err
+	if targetFile == "/dev/stdout" {
+		f = os.Stdout
+	} else {
+		// ensure path exists to write file to
+		if err := os.MkdirAll(filepath.Dir(targetFile), 0700); err != nil { // use mode 0700, since we are likely rendering sensitive data
+			return err
+		}
+
+		f, err = os.Create(targetFile)
+		if err != nil {
+			log.Errorf("could not create file [%s]", color.Magenta(targetFile))
+			return err
+		}
+		defer f.Close()
 	}
-	defer f.Close()
 
 	w := bufio.NewWriter(f)
 	defer w.Flush()
