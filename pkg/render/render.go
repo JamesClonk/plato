@@ -3,6 +3,8 @@ package render
 import (
 	"bufio"
 	"bytes"
+	"crypto/sha1"
+	"encoding/base64"
 	"fmt"
 	"io/fs"
 	"net"
@@ -21,6 +23,7 @@ import (
 	"github.com/Masterminds/sprig/v3"
 	"github.com/spf13/viper"
 	"github.com/tredoe/osutil/user/crypt/sha512_crypt"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v3"
 )
 
@@ -87,11 +90,13 @@ func RenderTemplates(removeTerraformFiles, removeAllDirectories bool) {
 }
 
 var funcMap = template.FuncMap{
-	"PLATO":       platoHeader,
-	"IPofCIDR":    ipOfCIDR,
-	"MKPasswd":    mkpasswd,
-	"ToYAML":      toYaml,
-	"SemverCheck": semverCheck,
+	"PLATO":          platoHeader,
+	"IPofCIDR":       ipOfCIDR,
+	"MKPasswd":       mkpasswd,
+	"ToYAML":         toYaml,
+	"SemverCheck":    semverCheck,
+	"HtpasswdBcrypt": htpasswdBcrypt,
+	"HtasswdSHA":     htpasswdSHA,
 }
 
 func platoHeader() string {
@@ -141,6 +146,24 @@ func mkpasswd(password string) string {
 	}
 
 	return hash
+}
+
+func htpasswdBcrypt(username string, password string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatalf("failed to encrypt string with bcrypt: %s", err)
+	}
+
+	return fmt.Sprintf("%s:%s", username, string(hash))
+}
+
+func htpasswdSHA(username string, password string) string {
+	s := sha1.New()
+	s.Write([]byte(password))
+	passwordSum := []byte(s.Sum(nil))
+	hash := base64.StdEncoding.EncodeToString(passwordSum)
+
+	return fmt.Sprintf("%s:{SHA}%s", username, hash)
 }
 
 func toYaml(object any, indent int) string {
