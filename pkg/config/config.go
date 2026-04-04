@@ -29,6 +29,7 @@ func InitConfig() {
 	if configFileExt != ".yaml" && configFileExt != ".yml" {
 		log.Fatalf("configuration file [%s] is not a YAML file, only .yaml and .yml are supported!", color.Red(configFile))
 	}
+	log.Debugf("plato set to configuration file [%s]", color.Magenta(configFile))
 
 	// immediately chdir if PLATO_WORKING_DIR is set. Used for example to jump to "_fixtures/" for testing.
 	if len(os.Getenv("PLATO_WORKING_DIR")) > 0 {
@@ -89,7 +90,7 @@ func InitConfig() {
 	// properly re-initialize logger again, we now have the correct intended configuration values available
 	log.Initialize()
 
-	log.Infof("plato configuration loaded and ready")
+	log.Infof("plato configuration [%s] loaded and ready", color.Magenta(configFile))
 }
 
 // load secrets into config
