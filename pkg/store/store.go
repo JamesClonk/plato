@@ -16,7 +16,7 @@ import (
 )
 
 func StoreGeneratedSecrets() {
-	log.Infof("storing secrets back into [%s] ...", color.Magenta("secrets.yaml"))
+	log.Infof("storing secrets back into [%s] ...", color.Magenta(config.SecretsFile()))
 
 	// re-encrypt all former .sops_enc files back to their original location
 	err := filepath.Walk(config.DirSource(), func(path string, info os.FileInfo, err error) error {
@@ -85,8 +85,9 @@ func processFile(path string, info os.FileInfo) error {
 	if ext == ".md" ||
 		ext == ".txt" ||
 		ext == ".zip" ||
-		ext == ".tar.gz" ||
-		ext == ".tgz" {
+		ext == ".tgz" ||
+		ext == ".gz" ||
+		strings.HasSuffix(path, ".tar.gz") {
 		return nil
 	}
 
@@ -115,7 +116,7 @@ func processFile(path string, info os.FileInfo) error {
 
 	// set value in-place
 	log.Debugf("store secret [%s]", color.Magenta(filename))
-	if err := command.Exec([]string{"sops", "--set", value, "secrets.yaml"}); err != nil {
+	if err := command.Exec([]string{"sops", "--set", value, config.SecretsFile()}); err != nil {
 		log.Errorf("could not store secret [%s]", color.Magenta(filename))
 		return err
 	}

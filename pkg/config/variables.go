@@ -12,6 +12,7 @@ var (
 	dirGeneratedSecrets = "rendered/secrets"
 	delimiterLeft       = "{{{"
 	delimiterRight      = "}}}"
+	secretsFile         = ""
 )
 
 func DirRoot() string {
@@ -51,4 +52,8 @@ func DelimiterRight() string {
 		return viper.GetString("plato.delimiters.right")
 	}
 	return delimiterRight
+}
+
+func SecretsFile() string {
+	return secretsFile
 }

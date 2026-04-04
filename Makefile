@@ -45,8 +45,8 @@ clean: trust
 .PHONY: test
 ## test: runs go test with the race detector
 test: trust
-	@echo "{{{ .ssh.public_key -}}}" | PLATO_WORKING_DIR=_fixtures/combined SOPS_AGE_KEY_FILE=../age.key go run -race main.go template | grep 'AAAAC3NzaC1lZDI1NTE5AAAAIMmROMaltL5DRYCYNHW9BE2BTZWUqZ3dISyzZopyrRjg' || (echo "failed basic stdin/stdout test" && exit 1)
 	SOPS_AGE_KEY_FILE="$$PWD/_fixtures/age.key" GOARCH=amd64 GOOS=linux TZ="" go test -tags=faketime -v -race ./...
+	@echo "{{{ .ssh.public_key -}}}" | PLATO_WORKING_DIR=_fixtures/combined SOPS_AGE_KEY_FILE=../age.key go run -race main.go template | grep 'AAAAC3NzaC1lZDI1NTE5AAAAIMmROMaltL5DRYCYNHW9BE2BTZWUqZ3dISyzZopyrRjg' || (echo "failed basic stdin/stdout test" && exit 1)
 	#GOARCH=amd64 GOOS=linux go test -v -race ./...
 
 .PHONY: vendor

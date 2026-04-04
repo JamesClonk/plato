@@ -1,10 +1,9 @@
 package store
 
 import (
-	"math/rand"
+	"math/rand/v2"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -25,10 +24,6 @@ func init() {
 
 	os.Setenv("SOPS_AGE_KEY_FILE", "age.key")
 	config.InitConfig()
-	config.LoadSecrets()
-
-	seed, _ := strconv.ParseInt(strings.Trim(command.RunOutput([]string{"date", `+%s%N`}), "\n"), 10, 64)
-	rand.Seed(seed)
 }
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -36,7 +31,7 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 func randStringRunes(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		b[i] = letterRunes[rand.IntN(len(letterRunes))]
 	}
 	return string(b)
 }

@@ -96,7 +96,7 @@ var funcMap = template.FuncMap{
 	"ToYAML":         toYaml,
 	"SemverCheck":    semverCheck,
 	"HtpasswdBcrypt": htpasswdBcrypt,
-	"HtasswdSHA":     htpasswdSHA,
+	"HtpasswdSHA":    htpasswdSHA,
 }
 
 func platoHeader() string {

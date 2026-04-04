@@ -18,7 +18,6 @@ func init() {
 	log.Initialize()
 	os.Setenv("SOPS_AGE_KEY_FILE", "age.key")
 	config.InitConfig()
-	config.LoadSecrets()
 	dir.Remove(config.DirTarget())
 	dir.Create(config.DirTarget())
 }

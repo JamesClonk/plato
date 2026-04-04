@@ -76,7 +76,6 @@ func RunInDir(command []string, dir string) {
 func exec(cmd *xc.Cmd) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
 
 	err := cmd.Run()
 	if err != nil {

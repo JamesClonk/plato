@@ -48,13 +48,13 @@ func SourceFile(filename string) {
 		}
 	}
 
-	// try to source file from current working directory
-	workFile, err := os.Open(filename)
+	// source file from etc directory first (lowest priority)
+	etcFile, err := os.Open(path.Join("/etc", strings.TrimPrefix(filename, ".")))
 	if err == nil {
-		sourceFile(workFile)
+		sourceFile(etcFile)
 	}
 
-	// now try to source file from home directory
+	// then try to source file from home directory
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal("%s", color.Red("%v", err))
@@ -64,9 +64,9 @@ func SourceFile(filename string) {
 		sourceFile(homeFile)
 	}
 
-	// now try to source file from etc directory
-	etcFile, err := os.Open(path.Join("/etc", strings.TrimPrefix(filename, ".")))
+	// finally source file from current working directory (highest priority)
+	workFile, err := os.Open(filename)
 	if err == nil {
-		sourceFile(etcFile)
+		sourceFile(workFile)
 	}
 }

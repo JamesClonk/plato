@@ -108,7 +108,7 @@ func LoadSecrets() {
 		log.Fatalf("could not read current working directory: %s", color.Red("%v", err))
 	}
 
-	secretsFile := filepath.Join(pwd, "secrets.yaml")
+	secretsFile = filepath.Join(pwd, "secrets.yaml")
 	if len(os.Getenv("PLATO_SECRETS_FILE")) > 0 {
 		secretsFile = os.Getenv("PLATO_SECRETS_FILE")
 	}
