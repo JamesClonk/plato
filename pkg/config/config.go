@@ -44,7 +44,7 @@ func InitConfig() {
 		log.Fatalf("could not read current working directory: %s", color.Red("%v", err))
 	}
 	// traverse directory path upwards, looking for the configFile in each folder
-	for i := 0; i < 32; i++ { // let's go up at max 32 folders, that should be plenty :P
+	for range 32 { // let's go up at max 32 folders, that should be plenty :P
 		if file.Exists(filepath.Join(pwd, configFile)) {
 			break
 		}
