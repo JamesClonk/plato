@@ -68,7 +68,7 @@ func InitConfig() {
 	log.Infof("current working directory: [%s]", color.Magenta(pwd))
 
 	// configure Viper
-	viper.SetConfigType(configFileExt)
+	viper.SetConfigType(strings.TrimPrefix(configFileExt, "."))
 	viper.SetConfigName(strings.TrimSuffix(configFile, configFileExt))
 	viper.AddConfigPath(".")
 
