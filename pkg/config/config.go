@@ -18,6 +18,15 @@ import (
 func InitConfig() {
 	log.Initialize() // init logger already so we can use it for the code below
 
+	configFilename := "plato.yaml"
+	// use custom configuration filename if PLATO_CONFIGURATION_FILE is set
+	if len(os.Getenv("PLATO_CONFIGURATION_FILE")) > 0 {
+		configFilename = os.Getenv("PLATO_CONFIGURATION_FILE")
+	}
+
+	// verify that we only use YAML files, other format are not supported in plato by design!
+	// TODO: implement check that configFilename is a YAML file
+
 	// immediately chdir if PLATO_WORKING_DIR is set. Used for example to jump to "_fixtures/" for testing.
 	if len(os.Getenv("PLATO_WORKING_DIR")) > 0 {
 		if err := os.Chdir(os.Getenv("PLATO_WORKING_DIR")); err != nil {
@@ -32,7 +41,7 @@ func InitConfig() {
 	}
 	// traverse directory path upwards, looking for the configFile in each folder
 	for i := 0; i < 32; i++ { // let's go up at max 32 folders, that should be plenty :P
-		if file.Exists(filepath.Join(pwd, "plato.yaml")) {
+		if file.Exists(filepath.Join(pwd, configFilename)) {
 			break
 		}
 		if pwd == "/" || pwd == "." || pwd == "" {
@@ -56,6 +65,7 @@ func InitConfig() {
 	log.Infof("current working directory: [%s]", color.Magenta(pwd))
 
 	// configure Viper
+	// TODO: use configFilename for SetConfigType and SetConfigName here
 	viper.SetConfigType("yaml")
 	viper.SetConfigName("plato")
 	viper.AddConfigPath(".")

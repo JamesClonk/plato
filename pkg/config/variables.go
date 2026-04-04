@@ -41,14 +41,14 @@ func DirGeneratedSecrets() string {
 
 func DelimiterLeft() string {
 	if len(viper.GetString("plato.delimiters.left")) > 0 {
-		return viper.GetString("plato.plato.delimiters.left")
+		return viper.GetString("plato.delimiters.left")
 	}
 	return delimiterLeft
 }
 
 func DelimiterRight() string {
 	if len(viper.GetString("plato.delimiters.right")) > 0 {
-		return viper.GetString("plato.plato.delimiters.right")
+		return viper.GetString("plato.delimiters.right")
 	}
 	return delimiterRight
 }
