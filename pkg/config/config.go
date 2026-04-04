@@ -97,9 +97,9 @@ func InitConfig() {
 func LoadSecrets() {
 	requireSecretsYAML := true
 
-	// check first if plato.yaml itself actually is SOPS-encrypted
+	// check first if the loaded plato configuration file itself actually is SOPS-encrypted
 	if viper.IsSet("sops.version") && viper.IsSet("sops.mac") && viper.IsSet("sops.age") {
-		requireSecretsYAML = false // we don't require an additional secrets.yaml in this case
+		requireSecretsYAML = false // we don't require an additional secrets file in this case
 		loadSecrets(viper.ConfigFileUsed())
 	}
 
@@ -107,7 +107,12 @@ func LoadSecrets() {
 	if err != nil {
 		log.Fatalf("could not read current working directory: %s", color.Red("%v", err))
 	}
+
 	secretsFile := filepath.Join(pwd, "secrets.yaml")
+	if len(os.Getenv("PLATO_SECRETS_FILE")) > 0 {
+		secretsFile = os.Getenv("PLATO_SECRETS_FILE")
+	}
+
 	if !file.Exists(secretsFile) {
 		if requireSecretsYAML {
 			log.Errorf("[%s] does not exist, cannot load any additional secrets!", color.Magenta(secretsFile))
