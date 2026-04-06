@@ -40,6 +40,7 @@ func Test_StoreGeneratedSecrets(t *testing.T) {
 	targetFile := "input/infrastructure/example.json.sops_enc"
 	_ = os.Remove(targetFile)
 	assert.False(t, file.Exists(targetFile))
+	t.Cleanup(func() { _ = os.Remove(targetFile) }) // cleanup to avoid cross-package test pollution
 
 	file.Touch(targetFile)
 	assert.True(t, file.Exists(targetFile))
