@@ -287,10 +287,7 @@ func Test_ipOfCIDR_IPv4(t *testing.T) {
 }
 
 func Test_ipOfCIDR_IPv6(t *testing.T) {
-	// current implementation only handles IPv4 — accessing IP[3] on a 16-byte IPv6 slice
-	// produces wrong results instead of the expected offset from network base
-	result := ipOfCIDR("fd00::/64", 1)
-	// IPv6 net.IP is 16 bytes, IP[3] is the 4th byte, not the last octet
-	// so this increments the wrong byte — demonstrating the bug
-	assert.NotEqual(t, "fd00::1", result, "IPv6 offset calculation is broken — IP[3] is not the host byte")
+	assert.Equal(t, "fd00::1", ipOfCIDR("fd00::/64", 1))
+	assert.Equal(t, "fd00::d", ipOfCIDR("fd00::/64", 13))
+	assert.Equal(t, "fd00::100", ipOfCIDR("fd00::/64", 256))
 }

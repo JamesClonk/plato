@@ -129,10 +129,13 @@ func ipOfCIDR(cidr string, pos int) string {
 		log.Fatalf("could not parse CIDR [%s]: %v", cidr, err)
 	}
 
-	for i := 0; i < pos; i++ {
-		c.IP[3]++
+	ip := c.IP
+	for i := len(ip) - 1; i >= 0 && pos > 0; i-- {
+		sum := int(ip[i]) + pos
+		ip[i] = byte(sum & 0xff)
+		pos = sum >> 8
 	}
-	return c.IP.String()
+	return ip.String()
 }
 
 func mkpasswd(password string) string {
